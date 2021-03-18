@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
+use Response;
 
 class CustomerController extends Controller
 {
@@ -22,11 +23,16 @@ class CustomerController extends Controller
 
     public function add()
     {
-        return view('customer.add');
+        $getCustomers = $this->customers->get();
+        return view('customer.add',compact('getCustomers'));
+        // return view('customer.add');
     }
 
     public function addCustomer(Request $request)
     {
+        // $getCustomers = $this->customers->get();
+        // // dd($getCustomers);
+        // return view('customer.add',compact('getCustomers'));
         try{
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
@@ -41,9 +47,18 @@ class CustomerController extends Controller
             }
             else{
                
-             $this->customers->create($request->all());
+            $user = $this->customers->create($request->all());
+            dd($user);
+            $customer = new Customer();
+            $customer->name = $request->name;
+            $customer->age = $request->age;
+            $customer->email = $request->email;
+            $customer->qualification = $request->qualification;
+            $customer->save();
+            
+            return response()->json(['data'=>$customer]);
     
-             return redirect('/customer/list')->with('success','Customer Added Successfully');
+            //  return redirect('/customer/list')->with('success','Customer Added Successfully');
              
             }
         }catch(Throwable $exception){
@@ -52,12 +67,12 @@ class CustomerController extends Controller
         
     }
 
-    public function update($id)
-    {
-        $getCustomers = $this->customers->where('id',$id)->first();
+    // public function update($id)
+    // {
+    //     $getCustomers = $this->customers->where('id',$id)->first();
 
-        return view('customer.update',compact('getCustomers'));
-    }
+    //     return view('customer.update',compact('getCustomers'));
+    // }
 
     public function updateCustomer(Request $request)
     {

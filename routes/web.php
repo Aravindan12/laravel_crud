@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/customer', 'CustomerController@add')->name('add');
-Route::post('/customer', 'CustomerController@addCustomer')->name('save');
+Route::post('/add', 'CustomerController@addCustomer')->name('customer.add');
 Route::get('/customer/list', 'CustomerController@list')->name('list');
 Route::get('/customer/edit/{customer}', 'CustomerController@update')->name('edit');
 Route::post('/customer/edit', 'CustomerController@updateCustomer')->name('update');
